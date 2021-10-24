@@ -61,16 +61,27 @@ public class Matrix {
             prod[i] = row[i] * c;
         return prod;
     }
+    public void swap(int r1, int r2){
+        double[] temp = matrix[r1];
+        matrix[r1] = matrix[r2];
+        matrix[r2] = temp;
+    }
 
     /**
      * row reduces the matrix to echelon form
      */
     public void echForm()
     {
-        if(matrix[0][0] == 0)
-            return;
         for(int j = 0; j < matrix[0].length; j++)
         {
+            if(matrix[j][j] == 0)
+                for(int i = j+1 ; i < matrix.length;i++)
+                {
+                    if(matrix[i][j] != 0)
+                        swap(i,j);
+                }
+
+
             for(int i = j+1; i < matrix.length; i++)
             {
                 double element = matrix[i][j];
