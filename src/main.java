@@ -6,5 +6,7 @@ public class main {
         System.out.println(x.toString());
         x.echForm();
         System.out.println(x.toString());
+	x.otherRREF();
+	System.out.println(x.toString());
     }
 }

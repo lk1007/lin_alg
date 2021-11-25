@@ -6,6 +6,8 @@ import java.util.Arrays.*;
 public class Matrix {
     private double[][] matrix;
     private int[][] pivCol;
+    private int numCol;
+    private int numRow;
     /**
      * This is a constructor for a matrix with parameeters row and col giving the number of rows and collumns in the matrix
      * The constructor constructs a 2D array from the two parameters and fills the values of the array with random numbers n 0 <= n <= 10
@@ -22,7 +24,8 @@ public class Matrix {
                 matrix[i][j] = (int)(10*Math.random());
             }
         }
-
+	numCol = matrix[0].length;
+	numRow = matrix.length;
     }
 
     /**
@@ -31,8 +34,7 @@ public class Matrix {
      * @param r2
      * @return
      */
-    public double[] add(int r1, int r2)
-    {
+    public double[] add(int r1, int r2){
         double[] row1 = matrix[r1];
         double[] row2 = matrix[r2];
         double[] sum = new double[row1.length];
@@ -47,6 +49,38 @@ public class Matrix {
             sum[i] = a1[i] + a2[i];
         return sum;
     }
+    public int firstNonZeroRow(boolean left){
+	if(left){
+		for(int i = 0;i < numCol;i++)
+		{
+			for(int j = 0; j < numRow; j++)
+				if(matrix[i][j] != 0)
+					return i;
+		}
+		return numRow;
+	}	
+	else{
+		for(int i = numCol - 1; i >= 0; i --){
+			for(int j = numRow - 1; j >= 0; j--)
+				if(matrix[i][j] != 0)
+					return j;
+		}
+		return 0;
+	}
+    }
+    public void transpose(){
+   	if(numRow == numCol){
+		for(int i = 0; i < numCol;i++){
+			for(int j = 0; j < numRow;j ++){
+				double temp = matrix[i][j];
+				matrix[i][j] = matrix[j][i];
+				matrix[j][i] = temp;
+			}
+		}	
+	}
+    }
+
+
     /**
      * takes the rth row of the matrix and returns an array containing the rth row multiplied by the constant c
      * @param r
@@ -61,6 +95,7 @@ public class Matrix {
             prod[i] = row[i] * c;
         return prod;
     }
+    /** swaps the r1th row and r2th row of the matrix*/
     public void swap(int r1, int r2){
         double[] temp = matrix[r1];
         matrix[r1] = matrix[r2];
@@ -90,10 +125,21 @@ public class Matrix {
             }
         }
     }
-    public void RREF()
-    {
-       //TODO Complete RREF
+    /** row reduces the matrix from echelon for to RREF */
+    public void RREF(){
+	for(int i = numCol - 1; i >= 0; i--){
+		int pivRow = firstNonZeroRow(false);
+		for(int j = pivRow-1;j > 0; j --){
+			double element = matrix[j][i];
+			if(element != 0)
+				matrix[i] = addArr(matrix[j],mult(pivRow,-1*element/matrix[pivRow][i]));
+           	 }
+	}	
     }
+    public void otherRREF(){
+    	transpose();
+	echForm();
+    }    
     public String toString()
     {
         String str = "";
